@@ -118,8 +118,11 @@ def main():
         # In Windows, in python/X.Y/<arch>/; in Linux, in just python/X.Y/.
         # Naming conventions vary so widely between versions and OSes
         # had to give up on checking them.
+        # If not specifying PY_LIMITED_API, the Python sources go under python/cv2/python-3.MINOR_VERSION/ instead of python/cv2/python-3/
         [
-            r"python/cv2/python-%s/cv2.*"
+            r"python/cv2/python-%s*/cv2.*"
+            % (sys.version_info[0]) if 'CMAKE_ARGS' in os.environ and "-DPYTHON3_LIMITED_API=ON" in os.environ['CMAKE_ARGS']
+            else r"python/cv2/python-%s.*/cv2.*"
             % (sys.version_info[0])
         ]
         +
