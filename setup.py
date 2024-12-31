@@ -115,12 +115,6 @@ def main():
             else []
         )
         +
-        (
-            [r"lib/libOrbbecSDK.dylib", r"lib/libOrbbecSDK.\d.\d.dylib", r"lib/libOrbbecSDK.\d.\d.\d.dylib"]
-            if platform.system() == "Darwin" and platform.machine() == "arm64"
-            else []
-        )
-        +
         # In Windows, in python/X.Y/<arch>/; in Linux, in just python/X.Y/.
         # Naming conventions vary so widely between versions and OSes
         # had to give up on checking them.

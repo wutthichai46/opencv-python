@@ -20,7 +20,7 @@ on:
 
 jobs:
   Build:
-    runs-on: python-macos11-m1
+    runs-on: python-macos12-m1
     strategy:
       fail-fast: false
       matrix:
