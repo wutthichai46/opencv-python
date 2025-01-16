@@ -58,10 +58,10 @@ jobs:
           echo "ENABLE_ROLLING=1" >> $GITHUB_ENV
         fi
     - name: Checkout
-      run: |
-        echo "Source branch name: ${{ github.head_ref }}"
-        echo "Target branch name: ${{ github.base_ref }}"
-        git clone --depth 1 -b "${{ github.head_ref }}" "https://github.com/${{ github.event.pull_request.head.repo.full_name }}" "${{ github.workspace }}"
+      uses: actions/checkout@v3
+      with:
+        submodules: false
+        fetch-depth: 0
     - name: Build a package
       run: source scripts/build.sh
     - name: Saving all wheels
@@ -103,10 +103,10 @@ jobs:
       run: find . -mindepth 1 -delete
       working-directory: ${{ github.workspace }}
     - name: Checkout
-      run: |
-        echo "Source branch name:  ${{ github.head_ref }}"
-        echo "Target branch name: ${{ github.base_ref }}"
-        git clone --depth 1 --recurse-submodules -b "${{ github.head_ref }}" "https://github.com/${{ github.event.pull_request.head.repo.full_name }}" "${{ github.workspace }}"
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+        fetch-depth: 0
     - name: Setup Environment variables
       run: if [ "3.10" == "${{ matrix.python-version }}" -o "3.11" == "${{ matrix.python-version }}" -o "3.12" == "${{ matrix.python-version }}" -o "3.13" == "${{ matrix.python-version }}" ]; then echo "TEST_DEPENDS=$(echo $NP_TEST_DEP_LATEST)" >> $GITHUB_ENV; else echo "TEST_DEPENDS=$(echo $NP_TEST_DEP)" >> $GITHUB_ENV; fi
     - name: Download a wheel accordingly to matrix
