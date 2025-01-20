@@ -20,11 +20,11 @@ on:
 
 jobs:
   Build:
-    runs-on: python-macos11-m1
+    runs-on: python-macos12-m1
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7']
+        python-version: ['3.9']
         platform: [x64]
         with_contrib: [0, 1]
         without_gui: [0, 1]
@@ -54,7 +54,7 @@ jobs:
         git submodule update --init multibuild
         echo $ENABLE_CONTRIB > contrib.enabled
         echo $ENABLE_HEADLESS > headless.enabled
-        export MACOSX_DEPLOYMENT_TARGET=11.0
+        export MACOSX_DEPLOYMENT_TARGET=13.0
         python${{ matrix.python-version }} -m pip install toml && python${{ matrix.python-version }} -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["build-system"]["requires"]))' | python${{ matrix.python-version }} -m pip install -r /dev/stdin
         python${{ matrix.python-version }} setup.py bdist_wheel --py-limited-api=cp37 --dist-dir=wheelhouse -v
         delocate-wheel ${{ github.workspace }}/wheelhouse/opencv*
@@ -71,11 +71,11 @@ jobs:
 
   Test:
     needs: [Build]
-    runs-on: opencv-cn-mac-arm64-tests
+    runs-on: python-macos12-m1
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
         platform: [x64]
         with_contrib: [0, 1]
         without_gui: [0, 1]

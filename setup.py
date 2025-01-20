@@ -110,7 +110,7 @@ def main():
     # Path regexes with forward slashes relative to CMake install dir.
     rearrange_cmake_output_data = {
         "cv2": (
-            [r"bin/opencv_videoio_ffmpeg\d{3}%s\.dll" % ("_64" if is64 else "")]
+            [r"bin/opencv_videoio_ffmpeg\d{4}%s\.dll" % ("_64" if is64 else "")]
             if os.name == "nt"
             else []
         )
@@ -118,8 +118,11 @@ def main():
         # In Windows, in python/X.Y/<arch>/; in Linux, in just python/X.Y/.
         # Naming conventions vary so widely between versions and OSes
         # had to give up on checking them.
+        # If not specifying PY_LIMITED_API, the Python sources go under python/cv2/python-3.MINOR_VERSION/ instead of python/cv2/python-3/
         [
-            r"python/cv2/python-%s/cv2.*"
+            r"python/cv2/python-%s*/cv2.*"
+            % (sys.version_info[0]) if 'CMAKE_ARGS' in os.environ and "-DPYTHON3_LIMITED_API=ON" in os.environ['CMAKE_ARGS']
+            else r"python/cv2/python-%s.*/cv2.*"
             % (sys.version_info[0])
         ]
         +
@@ -300,6 +303,7 @@ def main():
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.13",
             "Programming Language :: C++",
             "Programming Language :: Python :: Implementation :: CPython",
             "Topic :: Scientific/Engineering",
@@ -310,7 +314,7 @@ def main():
         cmake_source_dir=cmake_source_dir,
     )
 
-    print("OpenCV is raising funds to keep the library free for everyone, and we need the support of the entire community to do it. Donate to OpenCV on IndieGoGo:\nhttps://www.indiegogo.com/projects/opencv-5-support-non-profit-open-source-cv-ai#/")
+    print("OpenCV is raising funds to keep the library free for everyone, and we need the support of the entire community to do it. Donate to OpenCV on GitHub:\nhttps://github.com/sponsors/opencv\n")
 
 class RearrangeCMakeOutput:
     """
